@@ -4,115 +4,161 @@ import streamlit as st
 from openai import OpenAI
 
 # 1. PAGE SETUP
-st.set_page_config(page_title="K-Beauty Skincare Wiki", page_icon="✨", layout="wide")
+st.set_page_config(page_title="K-Beauty Skincare Wiki", page_icon="⚜️", layout="wide")
 
-# 2. INJECT HIGH-CONTRAST PASTEL & SELECTBOX OVERRIDES
+# 2. INJECT GOOGLE STITCH DESIGN TOKENS (WINE, GOLD & EGGSHELL)
 st.markdown("""
 <style>
-/* Main Gradient Background & Dark Base Text */
+/* Import Google Fonts from Stitch */
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
+
+/* Main Gradient Background & Base Text */
 .stApp {
-    background: linear-gradient(135deg, #fff5f7 0%, #f7f3ff 50%, #f0f7ff 100%) !important;
-    color: #2b2038 !important;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #FFF8F6 !important;
+    color: #201A18 !important;
+    font-family: 'Manrope', sans-serif !important;
 }
 
-/* Force Text Visibility */
-h1, h2, h3, h4, h5, h6, p, span, label, div, summary, caption {
-    color: #2b2038 !important;
+/* Force High Contrast Text Color */
+h1, h2, h3, h4, h5, h6, p, label, div, summary, caption {
+    color: #201A18 !important;
 }
 
-h1 { color: #3b2a59 !important; font-weight: 700 !important; }
-h2, h3 { color: #4a3b69 !important; font-weight: 600 !important; }
-
-/* Glassmorphism Cards */
-div[data-testid="stExpander"] {
-    background: rgba(255, 255, 255, 0.9) !important;
-    backdrop-filter: blur(12px);
-    border-radius: 16px !important;
-    border: 1px solid rgba(230, 180, 200, 0.5) !important;
-    box-shadow: 0 8px 24px 0 rgba(150, 100, 150, 0.08);
-    margin-bottom: 12px;
-}
-
-/* Tabs */
-button[data-baseweb="tab"] {
-    background-color: rgba(255, 255, 255, 0.6) !important;
-    border-radius: 20px !important;
-    padding: 8px 24px !important;
-}
-
-button[aria-selected="true"] {
-    background: linear-gradient(135deg, #ffc0cb 0%, #e6e6fa 100%) !important;
-    box-shadow: 0 4px 15px rgba(255, 192, 203, 0.4);
-}
-
-button[aria-selected="true"] p, button[aria-selected="true"] span {
-    color: #2c1e4a !important;
+/* Typography (EB Garamond for Headings) */
+h1 {
+    color: #5A121D !important;
+    font-family: 'EB Garamond', serif !important;
     font-weight: 700 !important;
+    letter-spacing: 0.5px;
 }
 
-/* FORCE LIGHT SELECTBOX CONTAINERS (FOR CLOUD DEPLOYMENT) */
-div[data-testid="stSelectbox"] > div > div,
-div[data-testid="stSelectbox"] div[data-baseweb="select"] > div,
-div[data-baseweb="select"] {
-    background-color: #ffffff !important;
-    border-radius: 10px !important;
-    border: 1px solid #ffb6c1 !important;
-}
-
-/* Selectbox Input Text Color */
-div[data-testid="stSelectbox"] *,
-div[data-baseweb="select"] * {
-    color: #2b2038 !important;
+h2, h3 {
+    color: #5A121D !important;
+    font-family: 'EB Garamond', serif !important;
     font-weight: 600 !important;
 }
 
-/* Selectbox Arrow Icon */
-div[data-testid="stSelectbox"] svg {
-    fill: #2b2038 !important;
+/* Expander / Product Cards (Soft Cream with Muted Gold Border) */
+div[data-testid="stExpander"] {
+    background-color: #F8EBE6 !important;
+    border-radius: 8px !important;
+    border: 1px solid #775A19 !important;
+    box-shadow: 0 4px 15px rgba(90, 18, 29, 0.05) !important;
+    margin-bottom: 14px;
 }
 
-/* DROPDOWN POPPER MENU FIX (Pastel Lilac & Black Text) */
+/* Expander Title Styling (Targeting paragraph only to prevent breaking icon ligatures) */
+div[data-testid="stExpander"] summary p {
+    color: #5A121D !important;
+    font-weight: 700 !important;
+    font-family: 'EB Garamond', serif !important;
+    font-size: 1.1rem !important;
+}
+
+/* Expander Icon Color */
+div[data-testid="stExpander"] summary svg {
+    fill: #5A121D !important;
+}
+
+/* Navigation Tabs */
+button[data-baseweb="tab"] {
+    background-color: #F8EBE6 !important;
+    border-radius: 6px !important;
+    padding: 8px 24px !important;
+    border: 1px solid #dac0c1 !important;
+}
+
+button[data-baseweb="tab"] p, button[data-baseweb="tab"] span {
+    color: #5A121D !important;
+    font-weight: 600 !important;
+    font-family: 'Manrope', sans-serif !important;
+}
+
+button[aria-selected="true"] {
+    background: #5A121D !important;
+    border: 1px solid #775A19 !important;
+    box-shadow: 0 4px 12px rgba(90, 18, 29, 0.2);
+}
+
+button[aria-selected="true"] p, button[aria-selected="true"] span {
+    color: #FFF8F6 !important;
+    font-weight: 700 !important;
+}
+
+/* Form Controls & Inputs */
+div[data-testid="stSelectbox"] > div > div,
+div[data-testid="stSelectbox"] div[data-baseweb="select"] > div,
+div[data-baseweb="select"],
+input, textarea {
+    background-color: #FFFFFF !important;
+    color: #201A18 !important;
+    border-radius: 6px !important;
+    border: 1px solid #775A19 !important;
+    font-family: 'Manrope', sans-serif !important;
+}
+
+div[data-testid="stSelectbox"] *,
+div[data-baseweb="select"] * {
+    color: #201A18 !important;
+    font-weight: 600 !important;
+}
+
+/* Dropdown Menu Popover */
 body div[data-baseweb="popover"],
 body div[data-baseweb="popover"] *,
 body [data-baseweb="menu"],
 body [data-baseweb="menu"] * {
-    background-color: #E5D9F2 !important;
-    color: #000000 !important;
+    background-color: #F8EBE6 !important;
+    color: #201A18 !important;
     font-weight: 600 !important;
+    font-family: 'Manrope', sans-serif !important;
 }
 
-/* Hover & Selected Options */
+/* Dropdown Options Hover State */
 body [data-baseweb="option"]:hover,
 body [data-baseweb="option"]:hover *,
 body li[aria-selected="true"],
 body li[aria-selected="true"] * {
-    background-color: #D4BEEB !important;
-    color: #000000 !important;
+    background-color: #5A121D !important;
+    color: #FFF8F6 !important;
     font-weight: 700 !important;
 }
 
 /* Action Buttons */
 .stButton>button {
-    background: linear-gradient(135deg, #ff9ebb 0%, #c49ed8 100%) !important;
-    border: none !important;
-    border-radius: 25px !important;
+    background: linear-gradient(135deg, #5A121D 0%, #753139 100%) !important;
+    border: 1px solid #775A19 !important;
+    border-radius: 6px !important;
     padding: 10px 24px !important;
-    box-shadow: 0 4px 12px rgba(255, 158, 187, 0.4) !important;
+    box-shadow: 0 4px 12px rgba(90, 18, 29, 0.2) !important;
+    transition: all 0.3s ease !important;
 }
 
 .stButton>button p, .stButton>button span {
-    color: #ffffff !important;
+    color: #FFF8F6 !important;
     font-weight: 700 !important;
+    font-family: 'Manrope', sans-serif !important;
+    letter-spacing: 0.05em;
 }
 
-img { border-radius: 12px; object-fit: cover; }
+.stButton>button:hover {
+    background: #753139 !important;
+    border-color: #FFF8F6 !important;
+    transform: translateY(-2px);
+}
+
+/* Product Card Images */
+img {
+    border-radius: 8px;
+    border: 1px solid #dac0c1;
+    object-fit: cover;
+}
 </style>
 """, unsafe_allow_html=True)
 
-st.title("✨ K-Beauty Skincare Wiki & AI Assistant")
+st.title("⚜️ K-Beauty Skincare Wiki & AI Assistant")
 
-# 3. API KEY DETECTION
+# 3. API KEY DETECTION (Cloud Secrets vs Local Fallback)
 try:
     DEEPSEEK_API_KEY = st.secrets["DEEPSEEK_API_KEY"]
 except Exception:
@@ -186,7 +232,7 @@ tools_schema = [
 ]
 
 # 6. STREAMLIT NAVIGATION TABS
-tab1, tab2, tab3 = st.tabs(["📚 Skincare Directory", "💬 AI Skincare Assistant", "🪄 AM/PM Routine Quiz"])
+tab1, tab2, tab3 = st.tabs(["📚 Skincare Directory", "💬 AI Skincare Assistant", "⚜️ AM/PM Routine Quiz"])
 
 # --- TAB 1: WIKI DIRECTORY ---
 with tab1:
@@ -293,7 +339,7 @@ with tab2:
 
 # --- TAB 3: ROUTINE QUIZ & GENERATOR ---
 with tab3:
-    st.subheader("🪄 Interactive Skin Quiz & AM/PM Routine Generator")
+    st.subheader("⚜️ Interactive Skin Quiz & AM/PM Routine Generator")
     st.caption("Answer 3 quick questions to generate a step-by-step Morning and Evening routine using products exclusively from your catalog!")
 
     col1, col2, col3 = st.columns(3)
@@ -313,7 +359,7 @@ with tab3:
             ["Minimalist Routine (2-3 Core Steps)", "Balanced Routine (4-5 Steps)", "Full Glass-Skin Routine (6+ Steps)"]
         )
 
-    if st.button("✨ Generate My Custom AM/PM Routine", use_container_width=True):
+    if st.button("⚜️ Generate My Custom AM/PM Routine", use_container_width=True):
         with st.spinner("DeepSeek is analyzing your catalog and building your routine..."):
             catalog_summary = "\n".join([
                 f"- Name: {item['name']} | Brand: {item['brand']} | Category: {item['category']} | Suitable for: {', '.join(item['skin_type'])} | Summary: {item['skin_sheet']} | Video: {item['video_url']}"
