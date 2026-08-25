@@ -6,17 +6,17 @@ from openai import OpenAI
 # 1. PAGE SETUP
 st.set_page_config(page_title="K-Beauty Skincare Wiki", page_icon="✨", layout="wide")
 
-# 2. INJECT GLOBAL PASTEL LILAC & HIGH-CONTRAST CSS
+# 2. INJECT HIGH-CONTRAST PASTEL & SELECTBOX OVERRIDES
 st.markdown("""
 <style>
-/* Main App Gradient Background */
+/* Main Gradient Background & Dark Base Text */
 .stApp {
     background: linear-gradient(135deg, #fff5f7 0%, #f7f3ff 50%, #f0f7ff 100%) !important;
     color: #2b2038 !important;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Base Text Contrast */
+/* Force Text Visibility */
 h1, h2, h3, h4, h5, h6, p, span, label, div, summary, caption {
     color: #2b2038 !important;
 }
@@ -32,11 +32,6 @@ div[data-testid="stExpander"] {
     border: 1px solid rgba(230, 180, 200, 0.5) !important;
     box-shadow: 0 8px 24px 0 rgba(150, 100, 150, 0.08);
     margin-bottom: 12px;
-}
-
-div[data-testid="stExpander"] summary p, div[data-testid="stExpander"] summary span {
-    color: #2b2038 !important;
-    font-weight: 600 !important;
 }
 
 /* Tabs */
@@ -56,14 +51,28 @@ button[aria-selected="true"] p, button[aria-selected="true"] span {
     font-weight: 700 !important;
 }
 
-/* Select Box Base Field */
-div[data-baseweb="select"] > div {
+/* FORCE LIGHT SELECTBOX CONTAINERS (FOR CLOUD DEPLOYMENT) */
+div[data-testid="stSelectbox"] > div > div,
+div[data-testid="stSelectbox"] div[data-baseweb="select"] > div,
+div[data-baseweb="select"] {
     background-color: #ffffff !important;
-    color: #000000 !important;
     border-radius: 10px !important;
+    border: 1px solid #ffb6c1 !important;
 }
 
-/* GLOBAL PORTAL OVERRIDE: Dropdown Menu Popover */
+/* Selectbox Input Text Color */
+div[data-testid="stSelectbox"] *,
+div[data-baseweb="select"] * {
+    color: #2b2038 !important;
+    font-weight: 600 !important;
+}
+
+/* Selectbox Arrow Icon */
+div[data-testid="stSelectbox"] svg {
+    fill: #2b2038 !important;
+}
+
+/* DROPDOWN POPPER MENU FIX (Pastel Lilac & Black Text) */
 body div[data-baseweb="popover"],
 body div[data-baseweb="popover"] *,
 body [data-baseweb="menu"],
@@ -73,7 +82,7 @@ body [data-baseweb="menu"] * {
     font-weight: 600 !important;
 }
 
-/* Hover & Selected States */
+/* Hover & Selected Options */
 body [data-baseweb="option"]:hover,
 body [data-baseweb="option"]:hover *,
 body li[aria-selected="true"],
