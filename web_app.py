@@ -6,65 +6,48 @@ from openai import OpenAI
 # 1. PAGE SETUP
 st.set_page_config(page_title="K-Beauty Skincare Wiki", page_icon="✨", layout="wide")
 
-# 2. INJECT PASTEL LILAC & HIGH-CONTRAST CSS
+# 2. INJECT GLOBAL PASTEL LILAC & HIGH-CONTRAST CSS
 st.markdown("""
 <style>
-/* Main Gradient Background & Dark Base Text */
+/* Main App Gradient Background */
 .stApp {
     background: linear-gradient(135deg, #fff5f7 0%, #f7f3ff 50%, #f0f7ff 100%) !important;
     color: #2b2038 !important;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Force text visibility across headers, body, labels, and markdown */
+/* Base Text Contrast */
 h1, h2, h3, h4, h5, h6, p, span, label, div, summary, caption {
     color: #2b2038 !important;
 }
 
-/* Headings */
-h1 {
-    color: #3b2a59 !important;
-    font-weight: 700 !important;
-}
+h1 { color: #3b2a59 !important; font-weight: 700 !important; }
+h2, h3 { color: #4a3b69 !important; font-weight: 600 !important; }
 
-h2, h3 {
-    color: #4a3b69 !important;
-    font-weight: 600 !important;
-}
-
-/* Glassmorphism Expander Cards */
+/* Glassmorphism Cards */
 div[data-testid="stExpander"] {
     background: rgba(255, 255, 255, 0.9) !important;
     backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
     border-radius: 16px !important;
     border: 1px solid rgba(230, 180, 200, 0.5) !important;
     box-shadow: 0 8px 24px 0 rgba(150, 100, 150, 0.08);
     margin-bottom: 12px;
 }
 
-/* Expander Header Text */
 div[data-testid="stExpander"] summary p, div[data-testid="stExpander"] summary span {
     color: #2b2038 !important;
     font-weight: 600 !important;
 }
 
-/* Tab Selection Styling */
+/* Tabs */
 button[data-baseweb="tab"] {
     background-color: rgba(255, 255, 255, 0.6) !important;
     border-radius: 20px !important;
     padding: 8px 24px !important;
-    border: 1px solid transparent !important;
-}
-
-button[data-baseweb="tab"] p, button[data-baseweb="tab"] span {
-    color: #5a4b7c !important;
-    font-weight: 600 !important;
 }
 
 button[aria-selected="true"] {
     background: linear-gradient(135deg, #ffc0cb 0%, #e6e6fa 100%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.9) !important;
     box-shadow: 0 4px 15px rgba(255, 192, 203, 0.4);
 }
 
@@ -73,45 +56,40 @@ button[aria-selected="true"] p, button[aria-selected="true"] span {
     font-weight: 700 !important;
 }
 
-/* Inputs & Form Controls Base */
-input, select, textarea, div[data-baseweb="select"] {
-    color: #000000 !important;
+/* Select Box Base Field */
+div[data-baseweb="select"] > div {
     background-color: #ffffff !important;
+    color: #000000 !important;
     border-radius: 10px !important;
 }
 
-/* DROPDOWN MENU FIX: Pastel Lilac Background & Black Text */
-div[data-baseweb="popover"],
-div[data-baseweb="popover"] *,
-div[data-baseweb="menu"],
-div[data-baseweb="menu"] *,
-ul[data-baseweb="menu"],
-ul[data-baseweb="menu"] *,
-[data-baseweb="option"],
-[data-baseweb="option"] * {
+/* GLOBAL PORTAL OVERRIDE: Dropdown Menu Popover */
+body div[data-baseweb="popover"],
+body div[data-baseweb="popover"] *,
+body [data-baseweb="menu"],
+body [data-baseweb="menu"] * {
     background-color: #E5D9F2 !important;
     color: #000000 !important;
     font-weight: 600 !important;
 }
 
-/* Dropdown Hover & Selected State */
-[data-baseweb="option"]:hover,
-[data-baseweb="option"]:hover *,
-li[aria-selected="true"],
-li[aria-selected="true"] * {
+/* Hover & Selected States */
+body [data-baseweb="option"]:hover,
+body [data-baseweb="option"]:hover *,
+body li[aria-selected="true"],
+body li[aria-selected="true"] * {
     background-color: #D4BEEB !important;
     color: #000000 !important;
     font-weight: 700 !important;
 }
 
-/* Buttons */
+/* Action Buttons */
 .stButton>button {
     background: linear-gradient(135deg, #ff9ebb 0%, #c49ed8 100%) !important;
     border: none !important;
     border-radius: 25px !important;
     padding: 10px 24px !important;
     box-shadow: 0 4px 12px rgba(255, 158, 187, 0.4) !important;
-    transition: all 0.3s ease !important;
 }
 
 .stButton>button p, .stButton>button span {
@@ -119,22 +97,13 @@ li[aria-selected="true"] * {
     font-weight: 700 !important;
 }
 
-.stButton>button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(255, 158, 187, 0.6) !important;
-}
-
-/* Product Card Images */
-img {
-    border-radius: 12px;
-    object-fit: cover;
-}
+img { border-radius: 12px; object-fit: cover; }
 </style>
 """, unsafe_allow_html=True)
 
 st.title("✨ K-Beauty Skincare Wiki & AI Assistant")
 
-# 3. API KEY DETECTION (Cloud Secrets vs Local Fallback)
+# 3. API KEY DETECTION
 try:
     DEEPSEEK_API_KEY = st.secrets["DEEPSEEK_API_KEY"]
 except Exception:
@@ -156,9 +125,6 @@ skincare_db = load_skincare_data()
 
 # 5. DEFINE AGENT TOOL & SCHEMA
 def search_skincare_db(query: str) -> str:
-    """
-    Search the local Korean Skincare database for products, brands, skin types, recommendations, or video review links.
-    """
     if not skincare_db:
         return "Skincare database is empty."
     
@@ -201,7 +167,7 @@ tools_schema = [
                 "properties": {
                     "query": {
                         "type": "string",
-                        "description": "Keywords such as product name, brand, skin type (e.g., 'dry', 'sensitive'), or category."
+                        "description": "Keywords such as product name, brand, skin type, or category."
                     }
                 },
                 "required": ["query"]
@@ -276,7 +242,7 @@ with tab2:
                 system_instruction = (
                     "You are an expert K-Beauty assistant powered by DeepSeek.\n"
                     "1. Always call `search_skincare_db` to look up product details from the database.\n"
-                    "2. ALWAYS include the YouTube try-out video link as an explicit Markdown link (e.g. [Watch Try-out Video](url)) in your final response."
+                    "2. ALWAYS include the YouTube try-out video link as an explicit Markdown link in your final response."
                 )
                 
                 messages = [{"role": "system", "content": system_instruction}]
