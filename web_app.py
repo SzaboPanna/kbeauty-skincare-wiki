@@ -4,7 +4,7 @@ import streamlit as st
 from openai import OpenAI
 
 # 1. PAGE SETUP
-st.set_page_config(page_title="Luxury Skincare Directory", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Skincare Directory", layout="wide", initial_sidebar_state="collapsed")
 
 # 2. INJECT EXACT STITCH / AI STUDIO CSS
 st.markdown("""
@@ -30,7 +30,7 @@ header[data-testid="stHeader"] {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
 }
 
-/* Force High Contrast Text Color */
+/* Force High Contrast Text Color Across General Elements */
 h1, h2, h3, h4, h5, h6, p, label, span, div {
     color: #2C2420 !important;
 }
@@ -182,21 +182,36 @@ div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
     box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 
-/* Action Buttons (#48111B Solid Fill) */
-.stButton>button[kind="primary"] {
+/* PRIMARY ACTION BUTTON (#48111B Solid Fill) */
+button[data-testid="stBaseButton-primary"],
+div.stButton > button[kind="primary"] {
     background-color: #48111B !important;
-    color: #F7EFE6 !important;
+    color: #FAF7F2 !important;
     border: none !important;
     border-radius: 6px !important;
-    padding: 12px 32px !important;
+    padding: 14px 32px !important;
     font-family: 'Cormorant Garamond', serif !important;
-    font-size: 1.2rem !important;
-    font-weight: 500 !important;
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
     transition: all 0.2s ease !important;
-    box-shadow: 0 4px 12px rgba(72, 17, 27, 0.15) !important;
+    box-shadow: 0 4px 12px rgba(72, 17, 27, 0.2) !important;
 }
 
-.stButton>button[kind="primary"]:hover {
+/* FORCE BUTTON TEXT TO MATCH BACKGROUND (#FAF7F2) */
+button[data-testid="stBaseButton-primary"] *,
+button[data-testid="stBaseButton-primary"] p,
+button[data-testid="stBaseButton-primary"] span,
+button[data-testid="stBaseButton-primary"] div,
+div.stButton > button[kind="primary"] *,
+div.stButton > button[kind="primary"] p,
+div.stButton > button[kind="primary"] span,
+div.stButton > button[kind="primary"] div {
+    color: #FAF7F2 !important;
+    font-weight: 600 !important;
+}
+
+button[data-testid="stBaseButton-primary"]:hover,
+div.stButton > button[kind="primary"]:hover {
     background-color: #380A12 !important;
     transform: translateY(-1px);
 }
@@ -211,7 +226,7 @@ div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
     text-transform: uppercase;
 }
 
-/* Dynamic Product Image Styling (Fills Left Column Responsively) */
+/* Dynamic Product Image Styling */
 div[data-testid="stImage"] img, img {
     width: 100% !important;
     height: auto !important;
@@ -316,17 +331,17 @@ tools_schema = [{
 nav_col1, nav_col2, nav_col3 = st.columns([1, 1, 1])
 
 with nav_col1:
-    if st.button("📖 Skincare Directory", key="nav_dir", type="secondary", use_container_width=True):
+    if st.button("Skincare Directory", key="nav_dir", type="secondary", use_container_width=True):
         st.session_state.active_tab = "directory"
         st.rerun()
 
 with nav_col2:
-    if st.button("✨ AI Assistant", key="nav_ai", type="secondary", use_container_width=True):
+    if st.button("AI Assistant", key="nav_ai", type="secondary", use_container_width=True):
         st.session_state.active_tab = "ai-assistant"
         st.rerun()
 
 with nav_col3:
-    if st.button("🧭 Routine Quiz", key="nav_quiz", type="secondary", use_container_width=True):
+    if st.button("Routine Quiz", key="nav_quiz", type="secondary", use_container_width=True):
         st.session_state.active_tab = "quiz"
         st.rerun()
 
@@ -337,7 +352,7 @@ st.markdown("<hr style='border: 0; border-top: 1px solid #E3D9CC; margin-top: 0p
 # TAB 1: DIRECTORY VIEW
 # ==========================================
 if st.session_state.active_tab == "directory":
-    st.markdown("<h1 class='font-serif' style='text-align: center; margin-bottom: 32px;'>Luxury Skincare Directory</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 class='font-serif' style='text-align: center; margin-bottom: 32px;'>Skincare Directory</h1>", unsafe_allow_html=True)
     
     # Search Input
     search_query = st.text_input("Search", placeholder="Search products by name, brand, or ingredient", label_visibility="collapsed")
@@ -432,7 +447,7 @@ if st.session_state.active_tab == "directory":
 
                 # Ask AI Assistant Button
                 st.markdown("<br>", unsafe_allow_html=True)
-                if st.button(f"✨ Ask AI Assistant about this product", key=f"ask_{p_id}", type="secondary"):
+                if st.button(f"Ask AI Assistant about this product", key=f"ask_{p_id}", type="secondary"):
                     st.session_state.messages.append({"role": "user", "content": f"Can you give me a breakdown of {item.get('name')} by {item.get('brand')}?"})
                     st.session_state.active_tab = "ai-assistant"
                     st.rerun()
@@ -453,17 +468,17 @@ elif st.session_state.active_tab == "ai-assistant":
     
     q_col1, q_col2 = st.columns(2)
     with q_col1:
-        if st.button("✨ Best sunscreen for oily acne-prone skin?", key="qp1", type="secondary", use_container_width=True):
+        if st.button("Best sunscreen for oily acne-prone skin?", key="qp1", type="secondary", use_container_width=True):
             st.session_state.messages.append({"role": "user", "content": "Best sunscreen for oily acne-prone skin?"})
             st.rerun()
-        if st.button("✨ What should I use for redness and damaged barrier?", key="qp2", type="secondary", use_container_width=True):
+        if st.button("What should I use for redness and damaged barrier?", key="qp2", type="secondary", use_container_width=True):
             st.session_state.messages.append({"role": "user", "content": "What should I use for redness and damaged barrier?"})
             st.rerun()
     with q_col2:
-        if st.button("✨ How do I layer Snail Mucin and Niacinamide?", key="qp3", type="secondary", use_container_width=True):
+        if st.button("How do I layer Snail Mucin and Niacinamide?", key="qp3", type="secondary", use_container_width=True):
             st.session_state.messages.append({"role": "user", "content": "How do I layer Snail Mucin and Niacinamide?"})
             st.rerun()
-        if st.button("✨ How to build a Korean Glass Skin morning routine?", key="qp4", type="secondary", use_container_width=True):
+        if st.button("How to build a Korean Glass Skin morning routine?", key="qp4", type="secondary", use_container_width=True):
             st.session_state.messages.append({"role": "user", "content": "How to build a Korean Glass Skin morning routine?"})
             st.rerun()
 
@@ -603,7 +618,7 @@ elif st.session_state.active_tab == "quiz":
 # --- FOOTER ---
 st.markdown("""
 <div class="custom-footer">
-    <div>Luxury Skincare Directory & AI Assistant</div>
+    <div>Skincare Directory & AI Assistant</div>
     <div>Curated K-Beauty formulations & personalized dermatological AI advice.</div>
 </div>
 """, unsafe_allow_html=True)
