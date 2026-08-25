@@ -6,58 +6,97 @@ from openai import OpenAI
 # 1. PAGE SETUP
 st.set_page_config(page_title="K-Beauty Skincare Wiki", page_icon="✨", layout="wide")
 
-# 2. INJECT PASTEL GLASSMORPHISM CSS
+# 2. INJECT HIGH-CONTRAST PASTEL CSS
 st.markdown("""
 <style>
-/* Main Gradient Background */
+/* Main Gradient Background & Dark Base Text */
 .stApp {
-    background: linear-gradient(135deg, #fff5f7 0%, #f7f3ff 50%, #f0f7ff 100%);
+    background: linear-gradient(135deg, #fff5f7 0%, #f7f3ff 50%, #f0f7ff 100%) !important;
+    color: #2b2038 !important;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Force text visibility across headers, body, labels, and markdown */
+h1, h2, h3, h4, h5, h6, p, span, label, div, summary, caption {
+    color: #2b2038 !important;
+}
+
+/* Headings */
+h1 {
+    color: #3b2a59 !important;
+    font-weight: 700 !important;
+}
+
+h2, h3 {
+    color: #4a3b69 !important;
+    font-weight: 600 !important;
 }
 
 /* Glassmorphism Expander Cards */
 div[data-testid="stExpander"] {
-    background: rgba(255, 255, 255, 0.75) !important;
+    background: rgba(255, 255, 255, 0.9) !important;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 16px !important;
-    border: 1px solid rgba(255, 182, 193, 0.4) !important;
-    box-shadow: 0 8px 32px 0 rgba(255, 182, 193, 0.15);
+    border: 1px solid rgba(230, 180, 200, 0.5) !important;
+    box-shadow: 0 8px 24px 0 rgba(150, 100, 150, 0.08);
     margin-bottom: 12px;
+}
+
+/* Expander Header Text */
+div[data-testid="stExpander"] summary p, div[data-testid="stExpander"] summary span {
+    color: #2b2038 !important;
+    font-weight: 600 !important;
 }
 
 /* Tab Selection Styling */
 button[data-baseweb="tab"] {
-    background-color: transparent !important;
+    background-color: rgba(255, 255, 255, 0.6) !important;
     border-radius: 20px !important;
     padding: 8px 24px !important;
-    font-weight: 600 !important;
-    color: #6b5b95 !important;
     border: 1px solid transparent !important;
+}
+
+button[data-baseweb="tab"] p, button[data-baseweb="tab"] span {
+    color: #5a4b7c !important;
+    font-weight: 600 !important;
 }
 
 button[aria-selected="true"] {
     background: linear-gradient(135deg, #ffc0cb 0%, #e6e6fa 100%) !important;
-    color: #4a3b69 !important;
-    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.9) !important;
     box-shadow: 0 4px 15px rgba(255, 192, 203, 0.4);
 }
 
-/* Button & Action Styling */
+button[aria-selected="true"] p, button[aria-selected="true"] span {
+    color: #2c1e4a !important;
+    font-weight: 700 !important;
+}
+
+/* Inputs & Form Controls */
+input, select, textarea, div[data-baseweb="select"] {
+    color: #2b2038 !important;
+    background-color: #ffffff !important;
+}
+
+/* Buttons */
 .stButton>button {
-    background: linear-gradient(135deg, #ffb6c1 0%, #d8bfd8 100%) !important;
-    color: #ffffff !important;
+    background: linear-gradient(135deg, #ff9ebb 0%, #c49ed8 100%) !important;
     border: none !important;
     border-radius: 25px !important;
-    font-weight: 600 !important;
     padding: 10px 24px !important;
-    box-shadow: 0 4px 12px rgba(255, 182, 193, 0.4) !important;
+    box-shadow: 0 4px 12px rgba(255, 158, 187, 0.4) !important;
     transition: all 0.3s ease !important;
+}
+
+.stButton>button p, .stButton>button span {
+    color: #ffffff !important;
+    font-weight: 700 !important;
 }
 
 .stButton>button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(255, 182, 193, 0.6) !important;
+    box-shadow: 0 6px 18px rgba(255, 158, 187, 0.6) !important;
 }
 
 /* Product Card Images */
@@ -70,10 +109,10 @@ img {
 
 st.title("✨ K-Beauty Skincare Wiki & AI Assistant")
 
-# 3. API KEY DETECTION (Local Fallback vs Cloud Secrets)
-if "DEEPSEEK_API_KEY" in st.secrets:
+# 3. API KEY DETECTION (Cloud Secrets vs Local Fallback)
+try:
     DEEPSEEK_API_KEY = st.secrets["DEEPSEEK_API_KEY"]
-else:
+except Exception:
     DEEPSEEK_API_KEY = "sk-ce85833ae46843db9a6d5f8e03fa8a5f"
 
 client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
