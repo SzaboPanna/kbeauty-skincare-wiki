@@ -168,16 +168,6 @@ div[data-testid="stChatMessage"] {
     margin-bottom: 12px;
 }
 
-.ingredient-tag {
-    background-color: #F0E9DF;
-    color: #52463C;
-    font-size: 0.7rem;
-    padding: 2px 8px;
-    border-radius: 3px;
-    margin-right: 4px;
-    display: inline-block;
-}
-
 .pro-icon {
     color: #5D6F41;
     font-weight: bold;
@@ -341,9 +331,18 @@ with tab1:
                     for con in item['cons']:
                         st.markdown(f"<span class='con-icon'>—</span> {con}", unsafe_allow_html=True)
                 
+                # Minimalist Text Link without Embedded Player or Thumbnail
                 if item.get('video_url'):
-                    st.markdown("<br>", unsafe_allow_html=True)
-                    st.video(item['video_url'])
+                    st.markdown(
+                        f"""
+                        <div style="margin-top: 16px;">
+                            <a href="{item['video_url']}" target="_blank" style="color: #48111B; font-weight: 600; text-decoration: underline; font-size: 0.9rem; letter-spacing: 0.02em;">
+                                Watch Video Review →
+                            </a>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
 
 # --- TAB 2: CHATBOT INTERFACE ---
 with tab2:
