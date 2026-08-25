@@ -6,7 +6,7 @@ from openai import OpenAI
 # 1. PAGE SETUP
 st.set_page_config(page_title="K-Beauty Skincare Wiki", page_icon="✨", layout="wide")
 
-# 2. INJECT HIGH-CONTRAST PASTEL CSS
+# 2. INJECT HIGH-CONTRAST PASTEL & DROPDOWN CSS
 st.markdown("""
 <style>
 /* Main Gradient Background & Dark Base Text */
@@ -73,10 +73,35 @@ button[aria-selected="true"] p, button[aria-selected="true"] span {
     font-weight: 700 !important;
 }
 
-/* Inputs & Form Controls */
+/* Inputs & Form Controls Base */
 input, select, textarea, div[data-baseweb="select"] {
     color: #2b2038 !important;
     background-color: #ffffff !important;
+    border-radius: 10px !important;
+}
+
+/* FIX: Selectbox Popover & Dropdown Menu Styling */
+div[data-baseweb="popover"],
+div[data-baseweb="popover"] > div,
+ul[data-baseweb="menu"] {
+    background-color: #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+ul[data-baseweb="menu"] li,
+ul[data-baseweb="menu"] li * {
+    background-color: #ffffff !important;
+    color: #2b2038 !important;
+    font-weight: 500 !important;
+}
+
+/* Dropdown Option Hover Highlight */
+ul[data-baseweb="menu"] li:hover,
+ul[data-baseweb="menu"] li:hover * {
+    background-color: #f5e8f7 !important;
+    color: #4a3b69 !important;
+    font-weight: 700 !important;
 }
 
 /* Buttons */
