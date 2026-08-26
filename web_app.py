@@ -43,22 +43,71 @@ h1, h2, h3, h4, h5, h6, p, label, span, div {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
 }
 
-/* Header Tab Buttons Styling */
-div[data-testid="stHorizontalBlock"] button[kind="secondary"] {
-    background-color: transparent !important;
-    border: none !important;
-    color: rgba(224, 207, 194, 0.8) !important;
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    font-size: 0.95rem !important;
-    font-weight: 400 !important;
-    border-radius: 0px !important;
-    border-bottom: 2px solid transparent !important;
-    padding: 6px 16px !important;
+/* 1. TOP NAVIGATION TABS (Deep Burgundy #48111B, 1px Solid Gold Border #D4AF37, 6px Radius, Cormorant Garamond 1.3rem, Warm Cream Text #FAF7F2) */
+.st-key-top_nav_bar button {
+    background-color: #48111B !important;
+    border: 1px solid #D4AF37 !important;
+    color: #FAF7F2 !important;
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 1.3rem !important;
+    font-weight: 600 !important;
+    border-radius: 6px !important;
+    padding: 10px 20px !important;
+    transition: all 0.25s ease !important;
+    box-shadow: 0 2px 8px rgba(72, 17, 27, 0.2) !important;
 }
 
-div[data-testid="stHorizontalBlock"] button[kind="secondary"]:hover {
-    color: #FFFFFF !important;
-    border-bottom: 2px solid rgba(224, 207, 194, 0.4) !important;
+.st-key-top_nav_bar button *,
+.st-key-top_nav_bar button p,
+.st-key-top_nav_bar button span,
+.st-key-top_nav_bar button div {
+    color: #FAF7F2 !important;
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 1.3rem !important;
+    font-weight: 600 !important;
+}
+
+.st-key-top_nav_bar button:hover {
+    background-color: #380A12 !important;
+    border-color: #F3E5AB !important;
+    box-shadow: 0 4px 12px rgba(72, 17, 27, 0.35) !important;
+    transform: translateY(-1px);
+}
+
+/* 2. PRODUCT CARD CLICKABLE TOGGLE BUTTONS (No Burgundy, Warm Cream Background, Centered Text, Full Width) */
+div[class*="st-key-card_"] button {
+    background-color: #FAF7F2 !important;
+    border: 1px solid #E3D9CC !important;
+    border-radius: 8px !important;
+    padding: 14px 20px !important;
+    margin-bottom: 8px !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02) !important;
+    width: 100% !important;
+}
+
+div[class*="st-key-card_"] button *,
+div[class*="st-key-card_"] button p,
+div[class*="st-key-card_"] button span,
+div[class*="st-key-card_"] button div {
+    color: #2C2420 !important;
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 1.25rem !important;
+    font-weight: 500 !important;
+    text-align: center !important;
+}
+
+div[class*="st-key-card_"] button:hover {
+    background-color: #F2E8DC !important;
+    border-color: #CFC2B2 !important;
+    transform: translateY(-1px);
+}
+
+div[class*="st-key-card_"] button:hover *,
+div[class*="st-key-card_"] button:hover p,
+div[class*="st-key-card_"] button:hover span,
+div[class*="st-key-card_"] button:hover div {
+    color: #48111B !important;
 }
 
 /* Form Inputs & Selectboxes */
@@ -323,24 +372,25 @@ tools_schema = [{
 }]
 
 # 7. HEADER NAVIGATION BAR
-nav_col1, nav_col2, nav_col3 = st.columns([1, 1, 1])
+with st.container(key="top_nav_bar"):
+    nav_col1, nav_col2, nav_col3 = st.columns([1, 1, 1])
 
-with nav_col1:
-    if st.button("Skincare Directory", key="nav_dir", type="secondary", use_container_width=True):
-        st.session_state.active_tab = "directory"
-        st.rerun()
+    with nav_col1:
+        if st.button("Skincare Directory", key="nav_dir", type="secondary", use_container_width=True):
+            st.session_state.active_tab = "directory"
+            st.rerun()
 
-with nav_col2:
-    if st.button("AI Assistant", key="nav_ai", type="secondary", use_container_width=True):
-        st.session_state.active_tab = "ai-assistant"
-        st.rerun()
+    with nav_col2:
+        if st.button("AI Assistant", key="nav_ai", type="secondary", use_container_width=True):
+            st.session_state.active_tab = "ai-assistant"
+            st.rerun()
 
-with nav_col3:
-    if st.button("Routine Quiz", key="nav_quiz", type="secondary", use_container_width=True):
-        st.session_state.active_tab = "quiz"
-        st.rerun()
+    with nav_col3:
+        if st.button("Routine Quiz", key="nav_quiz", type="secondary", use_container_width=True):
+            st.session_state.active_tab = "quiz"
+            st.rerun()
 
-st.markdown("<hr style='border: 0; border-top: 1px solid #E3D9CC; margin-top: 0px; margin-bottom: 24px;'>", unsafe_allow_html=True)
+st.markdown("<hr style='border: 0; border-top: 1px solid #E3D9CC; margin-top: 16px; margin-bottom: 24px;'>", unsafe_allow_html=True)
 
 
 # ==========================================
@@ -392,17 +442,18 @@ if st.session_state.active_tab == "directory":
         is_expanded = st.session_state.expanded_ids.get(p_id, False)
 
         if not is_expanded:
-            card_col1, card_col2 = st.columns([10, 1])
-            with card_col1:
-                st.markdown(f"<div class='font-serif' style='font-size: 1.25rem; color: #2C2420; padding-top: 6px; text-align: center;'>{item.get('brand', '')} - {item.get('name', '')} ({item.get('category', '')})</div>", unsafe_allow_html=True)
-            with card_col2:
-                if st.button("▼", key=f"expand_{p_id}", type="secondary"):
+            with st.container(key=f"card_toggle_{p_id}"):
+                if st.button(f"{item.get('brand', '')} - {item.get('name', '')} ({item.get('category', '')})  ▼", key=f"toggle_{p_id}", use_container_width=True):
                     st.session_state.expanded_ids[p_id] = True
                     st.rerun()
-            st.markdown("<hr style='border-top: 1px solid #E3D9CC; margin: 8px 0 16px 0;'>", unsafe_allow_html=True)
 
         else:
             st.markdown("<div class='product-card product-card-expanded'>", unsafe_allow_html=True)
+            with st.container(key=f"card_hdr_{p_id}"):
+                if st.button(f"{item.get('brand', '')} - {item.get('name', '')} ({item.get('category', '')})  ▲", key=f"collapse_hdr_{p_id}", use_container_width=True):
+                    st.session_state.expanded_ids[p_id] = False
+                    st.rerun()
+            
             img_col, details_col = st.columns([5, 7])
             
             with img_col:
@@ -410,8 +461,6 @@ if st.session_state.active_tab == "directory":
                     st.image(item['image_url'], use_container_width=True)
             
             with details_col:
-                st.markdown(f"<h2 class='font-serif' style='font-size: 1.6rem; margin-bottom: 4px;'>{item.get('brand', '')} - {item.get('name', '')}</h2>", unsafe_allow_html=True)
-                
                 skin_types_str = ", ".join(item.get('skin_type', []))
                 st.markdown(f"<span class='skin-type-badge'>Skin Types: {skin_types_str}</span>", unsafe_allow_html=True)
                 
@@ -447,9 +496,11 @@ if st.session_state.active_tab == "directory":
                     st.session_state.active_tab = "ai-assistant"
                     st.rerun()
 
-            if st.button("▲ Collapse Details", key=f"collapse_{p_id}", type="secondary", use_container_width=True):
-                st.session_state.expanded_ids[p_id] = False
-                st.rerun()
+            st.markdown("<br>", unsafe_allow_html=True)
+            with st.container(key=f"card_btn_{p_id}"):
+                if st.button("▲ Collapse Details", key=f"collapse_{p_id}", use_container_width=True):
+                    st.session_state.expanded_ids[p_id] = False
+                    st.rerun()
             st.markdown("</div>", unsafe_allow_html=True)
 
 
