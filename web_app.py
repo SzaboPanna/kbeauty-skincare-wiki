@@ -279,12 +279,7 @@ if "expanded_ids" not in st.session_state:
     st.session_state.expanded_ids = {"boj-relief-sun": True}
 
 if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {"role": "user", "content": "What are you as my AI skincare assistant?"},
-        {"role": "assistant", "content": "I am your dedicated luxury K-Beauty and dermatological skincare advisor. I can analyze your skin type, recommend the finest cult-favorite Korean formulations, explain complex ingredient synergies (like Centella, Snail Mucin, Niacinamide, and Ceramides), and design step-by-step morning and evening routines."},
-        {"role": "user", "content": "What is the beauty of K-Skincare sunscreens like Beauty of Joseon Relief Sun?"},
-        {"role": "assistant", "content": "Lightweight, creamy chemical sunscreen that hydrates deeply without feeling sticky or leaving a white cast. Gives a soft, glowing finish with 30% Rice Extract and Grain Probiotics.\n\n• Deeply hydrating with skin-barrier prebiotics\n• Sits invisibly under makeup without pilling\n• Note: Can feel slightly too dewy on extremely oily skin."}
-    ]
+    st.session_state.messages = []
 
 # 6. TOOL SCHEMA & SEARCH LOGIC
 def search_skincare_db(query: str) -> str:
@@ -399,7 +394,7 @@ if st.session_state.active_tab == "directory":
         if not is_expanded:
             card_col1, card_col2 = st.columns([10, 1])
             with card_col1:
-                st.markdown(f"<div class='font-serif' style='font-size: 1.25rem; color: #2C2420; padding-top: 6px;'>{item.get('brand', '')} - {item.get('name', '')} ({item.get('category', '')})</div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='font-serif' style='font-size: 1.25rem; color: #2C2420; padding-top: 6px; text-align: center;'>{item.get('brand', '')} - {item.get('name', '')} ({item.get('category', '')})</div>", unsafe_allow_html=True)
             with card_col2:
                 if st.button("▼", key=f"expand_{p_id}", type="secondary"):
                     st.session_state.expanded_ids[p_id] = True
@@ -551,7 +546,7 @@ elif st.session_state.active_tab == "ai-assistant":
 
     # Reset Chat
     st.markdown("<br>", unsafe_allow_html=True)
-    if st.button("🔄 Reset Chat Conversation", type="secondary"):
+    if st.button("Reset Chat Conversation", type="secondary"):
         st.session_state.messages = []
         st.rerun()
 
